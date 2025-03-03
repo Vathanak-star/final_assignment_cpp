@@ -235,6 +235,25 @@ void displayTranscation(Transaction transactions[],int& transcationCount){
     cout<<"\n===> The End <==="<<endl<<endl;
 }
 
+void sortBook(Book books[],int& n){
+    Book temp;
+	cout<<"===> Sort Selected <==="<<endl;
+	for(int i=0;i<n;i++){
+		for(int j=i+1;j<n;j++){
+			if(books[i].quantity<books[j].quantity){
+				temp=books[i];
+				books[i]=books[j];
+				books[j]=temp;
+			}
+		}
+	}
+	cout<<"\n===> Display Book After sort <==="<<endl<<endl;
+    for(int i = 0;i<n;i++){
+        cout<<"Title: "<<books[i].title<<" ,Author: "<<books[i].author<<" ,ISBN: "<<books[i].ISBN<<" ,Qty: "<<books[i].quantity<<endl;
+    }
+	cout<<"===> The End <==="<<endl;
+}
+
 
 int main(){
     Book books[1000];
@@ -296,7 +315,8 @@ int main(){
     cout<<"[7].Return Book"<<endl;
     cout<<"[8].Display Transcation"<<endl;
     cout<<"[9].Save Data"<<endl;
-    cout<<"[10].Exit"<<endl;
+    cout<<"[10].Sort Book by Qty"<<endl;
+    cout<<"[11].Exit"<<endl;
 
     while (true)
     {
@@ -332,6 +352,9 @@ int main(){
             saveData(books,count,borrowers,borrowerCount,transactions,transactionCount);
             break;
         case 10:
+            sortBook(books,count);
+            break;
+        case 11:
             cout<<"\n===> Program Ended, Thank you! <==="<<endl<<endl;
             exit(1);
         
