@@ -31,7 +31,12 @@ void addBook(Book books[],int& count){
     int bookCount;
     cout<<"\n===> Add Book <==="<<endl;
     cout<<"Enter amount of Book to Input: ";
-    cin>> bookCount;
+    if(!(cin>>bookCount)){
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(),'\n');
+        cout << "Invalid input. Please enter a number Values. Try again!" << endl<<endl;
+        return;
+    }
     bookCount = count + bookCount;
 
     for(count;count<bookCount;count++){
@@ -254,18 +259,9 @@ void sortBook(Book books[],int& n){
 	cout<<"===> The End <==="<<endl;
 }
 
-
-int main(){
-    Book books[1000];
-    Borrower borrowers[1000];
-    Transaction transactions[1000];
-    int choice;
-    ifstream bookFiles,borrowerFiles,transactionFiles;
+void loadBookFiles(Book books[],int& count){
+    ifstream bookFiles;
     Book book;
-    Borrower borrower;
-    Transaction transaction;
-    int count = 0,borrowerCount = 0,transactionCount = 0;
-
     bookFiles.open("Books.bin");
     if(!bookFiles.is_open()){
         cout<<"File cannot open!"<<endl;
@@ -278,6 +274,11 @@ int main(){
     }
     bookFiles.close();
     cout<<"Count: "<<count<<endl;
+}
+
+void loadBorrowerFiles(Borrower borrowers[],int& borrowerCount){
+    ifstream borrowerFiles;
+    Borrower borrower;
 
     borrowerFiles.open("Borrowers.bin");
     if(!borrowerFiles.is_open()){
@@ -291,6 +292,11 @@ int main(){
     }
     borrowerFiles.close();
     cout<<"Borrower Count: "<<borrowerCount<<endl;
+};
+
+void loadTranscationFiles(Transaction transactions[],int& transactionCount){
+    ifstream transactionFiles;
+    Transaction transaction;
 
     transactionFiles.open("transactions.bin");
     if(!transactionFiles.is_open()){
@@ -304,24 +310,48 @@ int main(){
     }
     transactionFiles.close();
     cout<<"Borrower Count: "<<transactionCount<<endl;
+};
 
+int main(){
+    Book books[1000];
+    Borrower borrowers[1000];
+    Transaction transactions[1000];
+    int choice;
+    int count = 0,borrowerCount = 0,transactionCount = 0;
 
-    cout<<"[1].Add Book"<<endl;
-    cout<<"[2].Display Books"<<endl;
-    cout<<"[3].Search Book by Title"<<endl;
-    cout<<"[4].Add Borrower"<<endl;
-    cout<<"[5].Display Borrowers"<<endl;
-    cout<<"[6].Borrow Book"<<endl;
-    cout<<"[7].Return Book"<<endl;
-    cout<<"[8].Display Transcation"<<endl;
-    cout<<"[9].Save Data"<<endl;
-    cout<<"[10].Sort Book by Qty"<<endl;
-    cout<<"[11].Exit"<<endl;
+    //load all the Files into Array
+    loadBookFiles(books,count);
+    loadBorrowerFiles(borrowers,borrowerCount);
+    loadTranscationFiles(transactions,transactionCount);
 
     while (true)
     {
+        cout<<"[1].Add Book"<<endl;
+        cout<<"[2].Display Books"<<endl;
+        cout<<"[3].Search Book by Title"<<endl;
+        cout<<"[4].Add Borrower"<<endl;
+        cout<<"[5].Display Borrowers"<<endl;
+        cout<<"[6].Borrow Book"<<endl;
+        cout<<"[7].Return Book"<<endl;
+        cout<<"[8].Display Transcation"<<endl;
+        cout<<"[9].Save Data"<<endl;
+        cout<<"[10].Sort Book by Qty"<<endl;
+        cout<<"[11].Exit"<<endl<<endl;
         cout<<"Enter Choice: ";
-        cin>>choice;
+
+        if(!(cin>>choice)){
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(),'\n');
+            cout << "Invalid input. Please enter a number between 1 and 11. Try again!" << endl<<endl;
+
+            continue;
+        }
+
+        if(choice < 1 || choice > 11){
+            cout << "Invalid choice. Please enter a number between 1 and 11." << endl<<endl;
+            continue;
+        }
+
         switch (choice)
         {
         case 1:
