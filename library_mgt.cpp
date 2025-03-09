@@ -59,26 +59,194 @@ void displayBook(Book book[],int& count){
     cout<<"\n===> The End <==="<<endl<<endl;
 }
 
-void searchBook(Book book[],int& count){
-    cout<<"\n===> Search Book by Title <==="<<endl;
-    char searchBook[100];
-    bool findbook = false;
+void binarySerachBook(Book book[],int& count){
+    char bookISBN[100];
+    int left = 0;
+    int right = count - 1;
+    int index;
+    cout<<"Enter Book ISBN to search: ";cin.ignore();cin.getline(bookISBN,100);
 
-    cout<<"Enter Book Title to search: ";cin.ignore();cin.getline(searchBook,100);
+    while (left <= right)
+    {
+        int mid = left + (right - left)/2;
+        int cmp = strcmp(book[mid].ISBN, bookISBN);
 
-    for(int i=0;i<count;i++){
-        if(strcmp(searchBook,book[i].title)==0){
-            cout<<"Title: "<<book[i].title<<" ,Author: "<<book[i].author<<" ,ISBN: "<<book[i].ISBN<<" ,Qty: "<<book[i].quantity<<endl;
-            findbook = true;
-            cout<<"Book find Successfully!"<<endl;
+        if(cmp == 0){
+            index = mid;
+            break;
+        }else if(cmp < 0){
+            left = mid + 1;
+            index = -1;
+        }else{
+            right = mid - 1;
+            index = -1;
+        }
+    }
+    
+    if (index != -1) {
+        cout << "Book found at index " << index << endl;
+        cout << "Title: " << book[index].title << endl;
+        cout << "Author: " << book[index].author << endl;
+        cout << "Quantity: " << book[index].quantity << endl;
+    } else {
+        cout << "Book with ISBN " << bookISBN << " not found." << endl;
+    }
+}
+
+void updateBook(Book book[],int& count){
+    int updateChoice;
+    char bookISBN[100];
+    bool running = true;
+    cout<<"Enter Book ISBN to Update: ";cin.ignore();cin.getline(bookISBN,100);
+
+    while (running)
+    {
+        cout<<"Enter Book Choice to Update Information"<<endl;
+        cout<<"[1].Update title"<<endl;
+        cout<<"[2].Update author"<<endl;
+        cout<<"[3].Update ISBN"<<endl;
+        cout<<"[4].Updat book Quanity"<<endl;
+        cout<<"[5].Exit"<<endl;
+        cout<<"Enter number Choie to Update: ";cin>>updateChoice;
+        switch (updateChoice)
+        {
+        case 1:
+            for(int i = 0;i<count;i++){
+                if(strcmp(bookISBN,book[i].ISBN)==0){
+                    cout<<"Enter new Title: ";
+                    cin.ignore();cin.getline(book[i].title,100);
+                    cout<<"New Title: "<<book[i].title<<" ,Author: "<<book[i].author<<" ,ISBN: "<<book[i].ISBN<<" ,Qty: "<<book[i].quantity<<endl;
+                }
+            }
+            break;
+        case 2:
+            for(int i = 0;i<count;i++){
+                if(strcmp(bookISBN,book[i].ISBN)==0){
+                    cout<<"Enter new Author: ";
+                    cin.ignore();cin.getline(book[i].author,100);
+                    cout<<"\n===> Update Successfully! <==="<<endl;
+                    cout<<"New Title: "<<book[i].title<<" ,Author: "<<book[i].author<<" ,ISBN: "<<book[i].ISBN<<" ,Qty: "<<book[i].quantity<<endl;
+                }
+            }
+            break;
+        case 3:
+            for(int i = 0;i<count;i++){
+                if(strcmp(bookISBN,book[i].ISBN)==0){
+                    cout<<"Enter new ISBN: ";
+                    cin.ignore();cin.getline(book[i].ISBN,100);
+                    cout<<"\n===> Update Successfully! <==="<<endl;
+                    cout<<"New Title: "<<book[i].title<<" ,Author: "<<book[i].author<<" ,ISBN: "<<book[i].ISBN<<" ,Qty: "<<book[i].quantity<<endl;
+                    strcpy(bookISBN,book[i].ISBN);
+                }
+            }
+            break;
+        case 4:
+            for(int i = 0;i<count;i++){
+                if(strcmp(bookISBN,book[i].ISBN)==0){
+                    cout<<"Enter new Qunatity: ";
+                    cin>>book[i].quantity;
+                    cout<<"New Title: "<<book[i].title<<" ,Author: "<<book[i].author<<" ,ISBN: "<<book[i].ISBN<<" ,Qty: "<<book[i].quantity<<endl;
+                }
+            }
+            break;
+        case 5:
+            running = false;
+            break;
+        default:
             break;
         }
     }
-    if(findbook == false){
-        cout<<"Book not found"<<endl;
-    }
-    cout<<"\n===> The End <==="<<endl<<endl;
+
+
 }
+
+void updateBorrower(Borrower borrower[],int& count){
+    int updateChoice;
+    char ID[100];
+    bool running = true;
+    cout<<"Enter Borrower ID to Update: ";cin.ignore();cin.getline(ID,100);
+
+    while (running)
+    {
+        cout<<"Enter Book Choice to Update Information"<<endl;
+        cout<<"[1].Update Name"<<endl;
+        cout<<"[2].Update ID"<<endl;
+        cout<<"[3].Update ContactInfo"<<endl;
+        cout<<"[4].Exit"<<endl;
+        cout<<"Enter number Choie to Update: ";cin>>updateChoice;
+        switch (updateChoice)
+        {
+        case 1:
+            for(int i = 0;i<count;i++){
+                if(strcmp(ID,borrower[i].ID)==0){
+                    cout<<"Enter new Name: ";
+                    cin.ignore();cin.getline(borrower[i].name,100);
+                    cout<<"\n===> Update Successfully! <==="<<endl;
+                    cout<<"New Name: "<<borrower[i].name<<" ,Id: "<<borrower[i].ID<<" ,Contact Info: "<<borrower[i].contactInfo<<endl;
+                }
+            }
+            break;
+        case 2:
+            for(int i = 0;i<count;i++){
+                if(strcmp(ID,borrower[i].ID)==0){
+                    cout<<"Enter new ID: ";
+                    cin.ignore();cin.getline(borrower[i].ID,100);
+                    cout<<"\n===> Update Successfully! <==="<<endl;
+                    cout<<"New Name: "<<borrower[i].name<<" ,Id: "<<borrower[i].ID<<" ,Contact Info: "<<borrower[i].contactInfo<<endl;
+                    strcpy(ID,borrower[i].ID);
+                }
+            }
+            break;
+        case 3:
+            for(int i = 0;i<count;i++){
+                if(strcmp(ID,borrower[i].ID)==0){
+                    cout<<"Enter new Contact Info: ";
+                    cin.ignore();cin.getline(borrower[i].contactInfo,100);
+                    cout<<"\n===> Update Successfully! <==="<<endl;
+                    cout<<"New Name: "<<borrower[i].name<<" ,Id: "<<borrower[i].ID<<" ,Contact Info: "<<borrower[i].contactInfo<<endl;
+                }
+            }
+            break;
+        case 4:
+            running = false;
+            break;
+        default:
+            break;
+        }
+    }
+
+
+}
+
+
+void deleteBorrower(Borrower borrower[],int& count){
+    char ID[100];
+    cout<<"Enter Borrower ID to Delete: ";cin.ignore();cin.getline(ID,100);
+    for(int i =0 ;i<count;i++){
+        if(strcmp(ID, borrower[i].ID)==0){
+            for(int j=i;j<count-1;j++){
+                borrower[j] = borrower[j+1];
+            }
+            count--;
+            cout<<"Borrower Deleted Successfully"<<endl;
+        }
+    }
+}
+
+void deleteBook(Book books[],int& count){
+    char bookISBN[100];
+    cout<<"Enter Book ISBN to Delete: ";cin.ignore();cin.getline(bookISBN,100);
+    for(int i =0 ;i<count;i++){
+        if(strcmp(bookISBN, books[i].ISBN)==0){
+            for(int j=i;j<count-1;j++){
+                books[j] = books[j+1];
+            }
+            count--;
+            cout<<"Book Deleted Successfully"<<endl;
+        }
+    }
+}
+
 
 void addBorrower(Borrower borrower[],int& borrowerCount){
     int addborrower;
@@ -245,7 +413,7 @@ void sortBook(Book books[],int& n){
 	cout<<"===> Sort Selected <==="<<endl;
 	for(int i=0;i<n;i++){
 		for(int j=i+1;j<n;j++){
-			if(books[i].quantity<books[j].quantity){
+			if(books[i].ISBN<books[j].ISBN){
 				temp=books[i];
 				books[i]=books[j];
 				books[j]=temp;
@@ -316,7 +484,7 @@ int main(){
     Book books[1000];
     Borrower borrowers[1000];
     Transaction transactions[1000];
-    int choice;
+    int choice,bookChoice,borrowerChoice;
     int count = 0,borrowerCount = 0,transactionCount = 0;
 
     //load all the Files into Array
@@ -326,10 +494,10 @@ int main(){
 
     while (true)
     {
-        cout<<"[1].Add Book"<<endl;
+        cout<<"[1].Add ,Update & Delete Book"<<endl;
         cout<<"[2].Display Books"<<endl;
         cout<<"[3].Search Book by Title"<<endl;
-        cout<<"[4].Add Borrower"<<endl;
+        cout<<"[4].Add, Udpate & Delete  Borrower"<<endl;
         cout<<"[5].Display Borrowers"<<endl;
         cout<<"[6].Borrow Book"<<endl;
         cout<<"[7].Return Book"<<endl;
@@ -355,16 +523,58 @@ int main(){
         switch (choice)
         {
         case 1:
-            addBook(books,count);
+            cout<<"Enter Book Choice"<<endl;
+            cout<<"[1].Add book"<<endl; 
+            cout<<"[2].Update Book"<<endl;
+            cout<<"[3].Delete Book"<<endl;
+            cout<<"Enter choice number: ";cin>>bookChoice;
+            switch (bookChoice)
+            {
+            case 1:
+                cout<<"Choice 1 Selected: Add book"<<endl;
+                addBook(books,count);
+                break;
+            case 2:
+                cout<<"Choice 2 Selected: Update book"<<endl;
+                updateBook(books,count);
+                break;
+            case 3:
+                cout<<"Choice 3 Selected: Delete book"<<endl;
+                deleteBook(books,count);
+                break;
+            default:
+                break;
+            }
             break;
         case 2:
             displayBook(books,count);
             break;
         case 3:
-            searchBook(books,count);
+            binarySerachBook(books,count);
             break;
         case 4:
-            addBorrower(borrowers,borrowerCount);
+            cout<<"Enter Borrower Choice"<<endl;
+            cout<<"[1].Add Borrower"<<endl; 
+            cout<<"[2].Update Borrower"<<endl;
+            cout<<"[3].Delete Borrower"<<endl;
+            cout<<"Enter choice number: ";cin>>borrowerChoice;
+            switch (borrowerChoice)
+            {
+            case 1:
+                cout<<"Choice 1 Selected: Add Borrower"<<endl;
+                addBorrower(borrowers,borrowerCount);
+                break;
+            case 2:
+                cout<<"Choice 2 Selected: Update Borrower"<<endl;
+                updateBorrower(borrowers,borrowerCount);
+                break;
+            case 3:
+                cout<<"Choice 3 Selected: Delete Borrower"<<endl;
+                deleteBorrower(borrowers,borrowerCount);
+                break;
+            default:
+                break;
+            }
             break;
         case 5:
             displayBorrower(borrowers,borrowerCount);
