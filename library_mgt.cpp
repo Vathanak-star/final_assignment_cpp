@@ -28,6 +28,7 @@ struct Transaction
 };
 
 void addBook(Book books[],int& count){
+    char bookISBN[100];
     int bookCount;
     cout<<"\n===> Add Book <==="<<endl;
     cout<<"Enter amount of Book to Input: ";
@@ -40,14 +41,32 @@ void addBook(Book books[],int& count){
     bookCount = count + bookCount;
 
     for(count;count<bookCount;count++){
+        bool sameISBN = false;
         cout<<"Enter Book Title: ";cin.ignore();cin.getline(books[count].title,100);
         cout<<"Enter book Author: ";cin.getline(books[count].author,100);
-        cout<<"Enter book ISBN: ";cin.getline(books[count].ISBN,100);
+        cout<<"Enter book ISBN: ";cin.getline(bookISBN,100);
         cout<<"Enter book Quantity: ";cin>>books[count].quantity;
+
+        if(books[count].quantity < 0){
+            cout << "Invalid quantity! Quantity cannot be less than 0. Please re-enter details for this book.\n";
+            count--;
+            continue;
+        }
+
+        for(int i=0;i<count;i++){
+            if(strcmp(bookISBN,books[i].ISBN)==0){
+                cout << "Invalid ISBN! ISBN cannot be the same.\n";
+                count--;
+                sameISBN = true;
+                continue;
+            }
+        }
+        if(!sameISBN){
+            strcpy(books[count].ISBN,bookISBN);
+            cout<<"\nBooks Added Successfully "<<endl;
+            cout<<"===> The End <==="<<endl<<endl;
+        }
     }
-    cout<<"Count: "<<count<<endl;
-    cout<<"\nBooks Added Successfully "<<endl;
-    cout<<"===> The End <==="<<endl<<endl;
 }
 
 void displayBook(Book book[],int& count){
@@ -250,18 +269,30 @@ void deleteBook(Book books[],int& count){
 
 void addBorrower(Borrower borrower[],int& borrowerCount){
     int addborrower;
+    char id[100];
     addborrower = borrowerCount + 1;
     cout<<"\n===> Add Borrower <==="<<endl<<endl;
 
     for(borrowerCount;borrowerCount<addborrower;borrowerCount++){
+        bool sameId = false;
         cout<<"Enter Borrower Name: ";cin.ignore();cin.getline(borrower[borrowerCount].name,100);
-        cout<<"Enter Borrower ID: ";cin.getline(borrower[borrowerCount].ID,100);
+        cout<<"Enter Borrower ID: ";cin.getline(id,100);
         cout<<"Enter Borrower Contact Info: ";cin.getline(borrower[borrowerCount].contactInfo,100);
-    }
 
-    cout<<"Borrower Count: "<<borrowerCount<<endl;
-    cout<<"\nBorrower Added Successfully "<<endl;
-    cout<<"===> The End <==="<<endl<<endl;
+        for(int i=0 ;i<borrowerCount;i++){
+            if(strcmp(id,borrower[i].ID)==0){
+                cout<<"Invild Id, The id cannot be the same. Try again!!"<<endl;
+                borrowerCount--;
+                sameId = true;
+                continue;
+            }
+        }
+        if(!sameId){
+            strcpy(borrower[borrowerCount].ID,id);
+            cout<<"\nBorrower Added Successfully "<<endl;
+            cout<<"===> The End <==="<<endl<<endl;
+        }
+    }
 
 }
 
@@ -272,6 +303,40 @@ void displayBorrower(Borrower borrower[],int& borrowerCount){
     }
 
     cout<<"\n===> The End <==="<<endl<<endl;
+}
+
+void binarySerachBorrower(Borrower borrower[],int& count){
+    char ID[100];
+    int left = 0;
+    int right = count - 1;
+    int index;
+    cout<<"Enter Borrower ID to search: ";cin.ignore();cin.getline(ID,100);
+
+    while (left <= right)
+    {
+        int mid = left + (right - left)/2;
+        int cmp = strcmp(borrower[mid].ID, ID);
+
+        if(cmp == 0){
+            index = mid;
+            break;
+        }else if(cmp < 0){
+            left = mid + 1;
+            index = -1;
+        }else{
+            right = mid - 1;
+            index = -1;
+        }
+    }
+    
+    if (index != -1) {
+        cout << "Borrower found at index " << index << endl;
+        cout << "Name: " << borrower[index].name << endl;
+        cout << "ID: " << borrower[index].ID << endl;
+        cout << "Contact Info: " << borrower[index].contactInfo << endl;
+    } else {
+        cout << "Book with ISBN " << ID << " not found." << endl;
+    }
 }
 
 void saveData(Book books[],int& count,Borrower borrowers[],int& borrowerCount,Transaction transactions[],int& transcationCount){
@@ -496,15 +561,16 @@ int main(){
     {
         cout<<"[1].Add ,Update & Delete Book"<<endl;
         cout<<"[2].Display Books"<<endl;
-        cout<<"[3].Search Book by Title"<<endl;
+        cout<<"[3].Search Book by ISBN"<<endl;
         cout<<"[4].Add, Udpate & Delete  Borrower"<<endl;
         cout<<"[5].Display Borrowers"<<endl;
-        cout<<"[6].Borrow Book"<<endl;
-        cout<<"[7].Return Book"<<endl;
-        cout<<"[8].Display Transcation"<<endl;
-        cout<<"[9].Save Data"<<endl;
-        cout<<"[10].Sort Book by Qty"<<endl;
-        cout<<"[11].Exit"<<endl<<endl;
+        cout<<"[6].Search Borrowers"<<endl;
+        cout<<"[7].Borrow Book"<<endl;
+        cout<<"[8].Return Book"<<endl;
+        cout<<"[9].Display Transcation"<<endl;
+        cout<<"[10].Save Data"<<endl;
+        cout<<"[11].Sort Book by Qty"<<endl;
+        cout<<"[12].Exit"<<endl<<endl;
         cout<<"Enter Choice: ";
 
         if(!(cin>>choice)){
@@ -527,7 +593,20 @@ int main(){
             cout<<"[1].Add book"<<endl; 
             cout<<"[2].Update Book"<<endl;
             cout<<"[3].Delete Book"<<endl;
-            cout<<"Enter choice number: ";cin>>bookChoice;
+            cout<<"[4].Exit"<<endl;
+            cout<<"Enter choice number: ";
+            if(!(cin>>bookChoice)){
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                cout << "Invalid input. Please enter a number between 1 and 4. Try again!" << endl<<endl;
+    
+                continue;
+            }
+    
+            if(bookChoice < 1 || bookChoice > 4){
+                cout << "Invalid choice. Please enter a number between 1 and 4." << endl<<endl;
+                continue;
+            }
             switch (bookChoice)
             {
             case 1:
@@ -541,6 +620,9 @@ int main(){
             case 3:
                 cout<<"Choice 3 Selected: Delete book"<<endl;
                 deleteBook(books,count);
+                break;
+            case 4:
+                cout<<"Exit Successfully"<<endl;
                 break;
             default:
                 break;
@@ -557,7 +639,20 @@ int main(){
             cout<<"[1].Add Borrower"<<endl; 
             cout<<"[2].Update Borrower"<<endl;
             cout<<"[3].Delete Borrower"<<endl;
-            cout<<"Enter choice number: ";cin>>borrowerChoice;
+            cout<<"[4].Exit"<<endl;
+            cout<<"Enter choice number: ";
+            if(!(cin>>borrowerChoice)){
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(),'\n');
+                cout << "Invalid input. Please enter a number between 1 and 4. Try again!" << endl<<endl;
+    
+                continue;
+            }
+    
+            if(borrowerChoice < 1 || borrowerChoice > 4){
+                cout << "Invalid choice. Please enter a number between 1 and 4." << endl<<endl;
+                continue;
+            }
             switch (borrowerChoice)
             {
             case 1:
@@ -572,6 +667,9 @@ int main(){
                 cout<<"Choice 3 Selected: Delete Borrower"<<endl;
                 deleteBorrower(borrowers,borrowerCount);
                 break;
+            case 4:
+                cout<<"Exit Successfully"<<endl;
+                break;
             default:
                 break;
             }
@@ -580,21 +678,24 @@ int main(){
             displayBorrower(borrowers,borrowerCount);
             break;
         case 6:
-            borrowerBook(books,count,borrowers,borrowerCount,transactions,transactionCount);
+            binarySerachBorrower(borrowers,borrowerCount);
             break;
         case 7:
-            returnBook(books,count,borrowers,borrowerCount,transactions,transactionCount);
+            borrowerBook(books,count,borrowers,borrowerCount,transactions,transactionCount);
             break;
         case 8:
-            displayTranscation(transactions,transactionCount);
+            returnBook(books,count,borrowers,borrowerCount,transactions,transactionCount);
             break;
         case 9:
-            saveData(books,count,borrowers,borrowerCount,transactions,transactionCount);
+            displayTranscation(transactions,transactionCount);
             break;
         case 10:
-            sortBook(books,count);
+            saveData(books,count,borrowers,borrowerCount,transactions,transactionCount);
             break;
         case 11:
+            sortBook(books,count);
+            break;
+        case 12:
             cout<<"\n===> Program Ended, Thank you! <==="<<endl<<endl;
             exit(1);
         
