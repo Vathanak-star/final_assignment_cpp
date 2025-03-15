@@ -503,21 +503,39 @@ void displayTranscation(Transaction transactions[],int& transcationCount){
     cout<<"\n===> The End <==="<<endl<<endl;
 }
 
-void sortBook(Book books[],int& n){
-    Book temp;
+void sortBook(Book book[],int& count){
 	cout<<"===> Sort Selected <==="<<endl;
-	for(int i=0;i<n;i++){
-		for(int j=i+1;j<n;j++){
-			if(books[i].ISBN<books[j].ISBN){
-				temp=books[i];
-				books[i]=books[j];
-				books[j]=temp;
-			}
-		}
-	}
+	for (int i = 0; i < count - 1; i++) {
+        for (int j = 0; j < count - i - 1; j++) {
+            if (strcmp(book[j].ISBN, book[j+1].ISBN) > 0) {
+                // Swap books
+                Book temp = book[j];
+                book[j] = book[j+1];
+                book[j+1] = temp;
+            }
+        }
+    }
 	cout<<"\n===> Display Book After sort <==="<<endl<<endl;
-    for(int i = 0;i<n;i++){
-        cout<<"Title: "<<books[i].title<<" ,Author: "<<books[i].author<<" ,ISBN: "<<books[i].ISBN<<" ,Qty: "<<books[i].quantity<<endl;
+    for(int i = 0;i<count;i++){
+        cout<<"Title: "<<book[i].title<<" ,Author: "<<book[i].author<<" ,ISBN: "<<book[i].ISBN<<" ,Qty: "<<book[i].quantity<<endl;
+    }
+	cout<<"===> The End <==="<<endl;
+}
+
+void sortBorrower(Borrower borrowers[],int& borrowerCount){
+	cout<<"===> Sort Selected <==="<<endl;
+	for (int i = 0; i < borrowerCount - 1; i++) {
+        for (int j = 0; j < borrowerCount - i - 1; j++) {
+            if (strcmp(borrowers[j].ID, borrowers[j+1].ID) > 0) {
+                Borrower temp = borrowers[j];
+                borrowers[j] = borrowers[j+1];
+                borrowers[j+1] = temp;
+            }
+        }
+    }
+	cout<<"\n===> Display Borrower After sort <==="<<endl<<endl;
+    for(int i = 0;i<borrowerCount;i++){
+        cout<<"Name: "<<borrowers[i].name<<" ,ID: "<<borrowers[i].ID<<" ,Contact Info: "<<borrowers[i].contactInfo<<endl;
     }
 	cout<<"===> The End <==="<<endl;
 }
@@ -596,7 +614,8 @@ int main(){
         cout<<"[9].Display Transcation"<<endl;
         cout<<"[10].Save Data"<<endl;
         cout<<"[11].Sort Book by ISBN"<<endl;
-        cout<<"[12].Exit"<<endl<<endl;
+        cout<<"[12].Sort Borrower by ID"<<endl;
+        cout<<"[13].Exit"<<endl<<endl;
         cout<<"Enter Choice: ";
 
         if(!(cin>>choice)){
@@ -607,7 +626,7 @@ int main(){
             continue;
         }
 
-        if(choice < 1 || choice > 11){
+        if(choice < 1 || choice > 13){
             cout << "Invalid choice. Please enter a number between 1 and 11." << endl<<endl;
             continue;
         }
@@ -722,6 +741,9 @@ int main(){
             sortBook(books,count);
             break;
         case 12:
+            sortBorrower(borrowers,borrowerCount);
+            break;
+        case 13:
             cout<<"\n===> Program Ended, Thank you! <==="<<endl<<endl;
             exit(1);
         
