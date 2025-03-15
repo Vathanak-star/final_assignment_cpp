@@ -35,7 +35,7 @@ void addBook(Book books[],int& count){
     if(!(cin>>bookCount)){
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(),'\n');
-        cout << "Invalid input. Please enter a number Values. Try again!" << endl<<endl;
+        cout << "=> Invalid input. Please enter a number Values. Try again! <=" << endl<<endl;
         return;
     }
     bookCount = count + bookCount;
@@ -48,14 +48,14 @@ void addBook(Book books[],int& count){
         cout<<"Enter book Quantity: ";cin>>books[count].quantity;
 
         if(books[count].quantity < 0){
-            cout << "Invalid quantity! Quantity cannot be less than 0. Please re-enter details for this book.\n";
+            cout << "\n=> Invalid quantity! Quantity cannot be less than 0. Please re-enter details for this book. <=\n\n";
             count--;
             continue;
         }
 
         for(int i=0;i<count;i++){
             if(strcmp(bookISBN,books[i].ISBN)==0){
-                cout << "Invalid ISBN! ISBN cannot be the same.\n";
+                cout << "\n=> Invalid ISBN! ISBN cannot be the same. <=\n\n";
                 count--;
                 sameISBN = true;
                 continue;
@@ -64,9 +64,9 @@ void addBook(Book books[],int& count){
         if(!sameISBN){
             strcpy(books[count].ISBN,bookISBN);
             cout<<"\nBooks Added Successfully "<<endl;
-            cout<<"===> The End <==="<<endl<<endl;
         }
     }
+    cout<<"===> The End <==="<<endl<<endl;
 }
 
 void displayBook(Book book[],int& count){
@@ -83,6 +83,7 @@ void binarySerachBook(Book book[],int& count){
     int left = 0;
     int right = count - 1;
     int index;
+    cout<<"\n===> Search Book <==="<<endl;
     cout<<"Enter Book ISBN to search: ";cin.ignore();cin.getline(bookISBN,100);
 
     while (left <= right)
@@ -116,7 +117,20 @@ void updateBook(Book book[],int& count){
     int updateChoice;
     char bookISBN[100];
     bool running = true;
+    bool bookfound = false;
+    cout<<"\n===> Update Book <==="<<endl;
     cout<<"Enter Book ISBN to Update: ";cin.ignore();cin.getline(bookISBN,100);
+
+    for(int i=0;i<count;i++){
+        if(strcmp(bookISBN,book[i].ISBN)==0){
+            bookfound = true;
+        }
+    }
+
+    if(!bookfound){
+        cout<<"=> Book does not Exist. Try again! <="<<endl<<endl;
+        return;
+    }
 
     while (running)
     {
@@ -183,7 +197,20 @@ void updateBorrower(Borrower borrower[],int& count){
     int updateChoice;
     char ID[100];
     bool running = true;
+    bool borrowerFound = false;
+    cout<<"\n===> Update Borrower <==="<<endl;
     cout<<"Enter Borrower ID to Update: ";cin.ignore();cin.getline(ID,100);
+
+    for(int i=0;i<count;i++){
+        if(strcmp(ID,borrower[i].ID)==0){
+            borrowerFound = true;
+        }
+    }
+
+    if(!borrowerFound){
+        cout<<"=> Borrower does not Exist. Try again! <="<<endl<<endl;
+        return;
+    }
 
     while (running)
     {
@@ -240,6 +267,7 @@ void updateBorrower(Borrower borrower[],int& count){
 
 void deleteBorrower(Borrower borrower[],int& count){
     char ID[100];
+    cout<<"\n===> Delete Borrower <==="<<endl;
     cout<<"Enter Borrower ID to Delete: ";cin.ignore();cin.getline(ID,100);
     for(int i =0 ;i<count;i++){
         if(strcmp(ID, borrower[i].ID)==0){
@@ -247,13 +275,14 @@ void deleteBorrower(Borrower borrower[],int& count){
                 borrower[j] = borrower[j+1];
             }
             count--;
-            cout<<"Borrower Deleted Successfully"<<endl;
+            cout<<"\n=> Borrower Deleted Successfully <= \n"<<endl;
         }
     }
 }
 
 void deleteBook(Book books[],int& count){
     char bookISBN[100];
+    cout<<"\n===> Delete Book <==="<<endl;
     cout<<"Enter Book ISBN to Delete: ";cin.ignore();cin.getline(bookISBN,100);
     for(int i =0 ;i<count;i++){
         if(strcmp(bookISBN, books[i].ISBN)==0){
@@ -310,6 +339,7 @@ void binarySerachBorrower(Borrower borrower[],int& count){
     int left = 0;
     int right = count - 1;
     int index;
+    cout<<"\n===> Search Borrower <==="<<endl;
     cout<<"Enter Borrower ID to search: ";cin.ignore();cin.getline(ID,100);
 
     while (left <= right)
@@ -411,9 +441,9 @@ void borrowerBook(Book books[],int& count,Borrower borrowers[],int& borrowerCoun
         strcpy(transactions[transcationCount].borrowerID,borrowerID);
         strcpy(transactions[transcationCount].dateBorrowed,date);
         transcationCount++;
-        cout << "Transaction added successfully!" << endl;
+        cout << "\n=> Transaction added successfully! <=" << endl;
     }else{
-        cout << "Invalid ISBN or Borrower ID. Transaction failed." << endl;
+        cout << "\n=> Invalid ISBN or Borrower ID. Transaction failed. <=" << endl;
     }
 }
 
@@ -500,13 +530,11 @@ void loadBookFiles(Book books[],int& count){
         cout<<"File cannot open!"<<endl;
     }else{
         while (bookFiles.read(reinterpret_cast<char*>(&book), sizeof(book))){
-            cout<<"Book added successfully"<<endl;
             books[count] = book;
             count++;
         }
     }
     bookFiles.close();
-    cout<<"Count: "<<count<<endl;
 }
 
 void loadBorrowerFiles(Borrower borrowers[],int& borrowerCount){
@@ -518,13 +546,11 @@ void loadBorrowerFiles(Borrower borrowers[],int& borrowerCount){
         cout<<"Borrowers File cannot open!"<<endl;
     }else{
         while (borrowerFiles.read(reinterpret_cast<char*>(&borrower), sizeof(borrower))){
-            cout<<"Borrowers added successfully"<<endl;
             borrowers[borrowerCount] = borrower;
             borrowerCount++;
         }
     }
     borrowerFiles.close();
-    cout<<"Borrower Count: "<<borrowerCount<<endl;
 };
 
 void loadTranscationFiles(Transaction transactions[],int& transactionCount){
@@ -536,13 +562,11 @@ void loadTranscationFiles(Transaction transactions[],int& transactionCount){
         cout<<"Transaction File cannot open!"<<endl;
     }else{
         while (transactionFiles.read(reinterpret_cast<char*>(&transaction), sizeof(transaction))){
-            cout<<"Transcation added successfully"<<endl;
             transactions[transactionCount] = transaction;
             transactionCount++;
         }
     }
     transactionFiles.close();
-    cout<<"Borrower Count: "<<transactionCount<<endl;
 };
 
 int main(){
@@ -557,6 +581,8 @@ int main(){
     loadBorrowerFiles(borrowers,borrowerCount);
     loadTranscationFiles(transactions,transactionCount);
 
+    cout<<"===> Welcome to Library Mgt System! <==="<<endl<<endl;
+
     while (true)
     {
         cout<<"[1].Add ,Update & Delete Book"<<endl;
@@ -569,7 +595,7 @@ int main(){
         cout<<"[8].Return Book"<<endl;
         cout<<"[9].Display Transcation"<<endl;
         cout<<"[10].Save Data"<<endl;
-        cout<<"[11].Sort Book by Qty"<<endl;
+        cout<<"[11].Sort Book by ISBN"<<endl;
         cout<<"[12].Exit"<<endl<<endl;
         cout<<"Enter Choice: ";
 
@@ -589,7 +615,7 @@ int main(){
         switch (choice)
         {
         case 1:
-            cout<<"Enter Book Choice"<<endl;
+            cout<<"\n===> Enter Book Choice to Add, Update or Delete <==="<<endl;
             cout<<"[1].Add book"<<endl; 
             cout<<"[2].Update Book"<<endl;
             cout<<"[3].Delete Book"<<endl;
@@ -635,7 +661,7 @@ int main(){
             binarySerachBook(books,count);
             break;
         case 4:
-            cout<<"Enter Borrower Choice"<<endl;
+        cout<<"\n===> Enter Borrower Choice to Add, Update or Delete <==="<<endl;
             cout<<"[1].Add Borrower"<<endl; 
             cout<<"[2].Update Borrower"<<endl;
             cout<<"[3].Delete Borrower"<<endl;
